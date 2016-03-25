@@ -6,7 +6,7 @@
 	function FirstCtrl() {
 		var vm = this;
 
-		var ROW = 100 , COLUMN = 20;
+		var ROW = 200 , COLUMN = 20;
 		vm.array = [];
 
 		function initializeArray() {
