@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html ng-app="myapp">
+<html ng-app="myapp" lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>iScroll demo: 2d scroll</title>
-<meta charset="utf-8">
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="../../build/iscroll-probe.js"></script>
+<script type="text/javascript" src="build/iscroll-probe.js"></script>
 
 <script type="text/javascript">
 
@@ -105,7 +104,7 @@ body {
 	position: absolute;
 	z-index: 1;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
-	width: 4000px;
+	width: 100px;
 	-webkit-transform: translateZ(0);
 	-moz-transform: translateZ(0);
 	-ms-transform: translateZ(0);
@@ -128,7 +127,7 @@ body {
 	position: absolute;
 	z-index: 1;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
-	width: 200px;
+	width: 100%;
 	-webkit-transform: translateZ(0);
 	-moz-transform: translateZ(0);
 	-ms-transform: translateZ(0);
@@ -260,37 +259,56 @@ p {
 </style>
 </head>
 <body onload="loaded()" ng-controller="FirstCtrl as f">
-	<div class="row">
-		<div class="col-lg-2" style="z-index:20;" id="great"> <ul><li> On Now</li></ul></div>
-		<div class="col-lg-10">
-			<div class="col-lg-2" id="horizontal">
-				<div class="h-scroller">
-					<ul>
-						<li ng-repeat="col in f.array[0]">COLUMN {{$index+1}}</li>
-					</ul>
-				</div>
-			</div>	
-		</div>
-	</div>
-	<div class="row" ng-repeat="row in f.array">
-		<div class="col-lg-2" id="vertical">
-			<div class="scroller1">
-				<ul>
-					<li>ROW {{$index+1}}</li>
-				</ul>
-			</div>
-		</div>
-		<div id="wrapper" class="col-lg-10">
-			<div id="scroller">
-				<ul>
-					<li ng-repeat="column in row">{{column}}</li>
-				</ul>
-			</div>
-		</div>
-	</div>
+	<div class="container" id="demo" style="margin-bottom:30px;" >
+				<div class="row">
+					<div class="col-xs-3 col-sm-2 col-md-2" id="channelList">
+						<div ng-repeat="channel in (filteredChannels = (channelInfos | categorylanguageother: options | favouirate : isFavONN)) | limitTo: limit ">
+						<div class="row" style="color:#555;">
+							<div class="col-xs-12 col-sm-12 col-md-12 channel-section" ng-style="{'border-bottom':getBorderBottomForChannel($last)}" ng-click="hideEventDetails()">
+								<p class="text-center">
+								<a href="http://www.astro.com.my{{::getChannelUrl(channel)}}" class="a-noline-hover" ng-click="sendAnalytics(channel)">
+								<img  style="margin-top:10px;margin-bottom:5px;width: 51px;height: 32px;" img-preload class="fade" ng-src="https://astrocontent.s3.amazonaws.com/Images/ChannelLogo/Pos/{{::channel.linearServicestbNumber}}_120.png"  alt="{{::channel.linearServiceTitle}} Logo"/>
+								</a><br/><span class="pgcursor">CH{{::channel.linearServicestbNumber}}</span>
+								<span class="glyphicon glyphicon-heart pgcursor favourite" style="top:45px;" aria-hidden="true" ng-show="channel.favouirate" ng-click="toggleFavouirate(channel)"></span>
+								<span class="glyphicon glyphicon-heart pgcursor unfavourite" style="top:45px;" aria-hidden="true" ng-hide="channel.favouirate" ng-click="toggleFavouirate(channel)"></span></p>
+							</div>
+						</div>
+						<div id="chDetailsfor{{::$index + 2}}" class="hidden-xs hidden-sm row chDetails">
+							<div class="hidden-xs hidden-sm">
+							<!--img ng-src="https://astrocontent.s3.amazonaws.com/Images/ChannelLogo/Pos/{{channel.linearServicestbNumber}}_300.png" style="/*margin-left:-25px;*/" class="hidden-xs hidden-sm"/-->
+							</div>
+						</div>
+						<div id="xsmdlgdchDetailsfor{{::$index + 2}}" class="hidden-xs hidden-md hidden-lg row chDetails">
+							<div class="hidden-xs hidden-md hidden-lg">
+							<!--img ng-src="https://astrocontent.s3.amazonaws.com/Images/ChannelLogo/Pos/{{channel.linearServicestbNumber}}_100.png" style="margin-left:20px;margin-top:40px;" class="hidden-xs hidden-md hidden-lg"/-->
+							</div>
+						</div>
+						<div id="smmdlgdchDetailsfor{{::$index + 2}}" class="hidden-sm hidden-md hidden-lg row chDetailsSmall">
+							<div class="hidden-sm hidden-md hidden-lg">
+							<!--img ng-src="https://astrocontent.s3.amazonaws.com/Images/ChannelLogo/Pos/{{channel.linearServicestbNumber}}_100.png" style="margin-left:20px;" class="img-responsive hidden-sm hidden-md hidden-lg"/-->
+							</div>
+						</div>
+						</div>
+					</div>
+					<div id="xyz" class="container-fluid" panhandler content-width="3960px" style="padding-left:0px;">
+						<div ng-repeat="channel in filteredChannels | limitTo: limit">
+						<div id="ch{{::$index+2}}" class="horizontal-scroll row row-horizon pgTitles">
+							<div class="col-xs-3 col-sm-1 col-md-1 event" style="padding-top:30px;" ng-repeat="event in channel.eventInfo | selectedDate:selectedDay.date | beforeFirstEvent" ng-style="{'width': calcWidth(event, $first, $last)+'px', 'min-height': '80px', 'border-right':'1px solid #D8D8D8', 'border-bottom': '1px solid #D8D8D8', 'background-color': '#F8F8F8', 'color':'#555','font-size':'14px', 'white-space':'nowrap','overflow':'hidden','text-overflow':'ellipsis', 'pointer-events': runningTask > 0 ? 'none':'auto', 'padding-left' : calcLeftPadding(event)+'px', 'padding-right' : calcRightPadding(event)+'px'}"  ng-init="selectedCell[$parent.$index][$index] = false" id="pg{{::$parent.$index}}c{{::$index}}">
+						        	<span class="pgcursor program"  id="ch-pg.{{::$parent.$index+2}}_{{::$parent.$index}}{{$index}}" ng-hide="$first && checkType(event, 'number')" ng-click="showEventDetails($parent.$index, $index, event)" data-toggle="tooltip" title="{{event.program_title}}" > {{::event.program_title}} {{::event.live}} {{::event.primer}}
+						        	</span>
+							</div>
+							<!-- " -->
+							<!--ng-click="showEventDetails($parent.$index, $index, event)" -->
+						</div>
+						<div id="pgDetailsfor{{::$index+2}}"  style="/*padding-top:25px;*/" class="row row-horizon pgDetails">
 
+						</div>
+						</div>
+					</div> <!--/ .span-10 container -->
+				</div><!--/ .row -->
+			</div>
 	<div id="footer"></div>
-	<script src="../../angular.min.js"></script>
+	<script src="angular.min.js"></script>
 	<script src="app.js"></script>
 </body>
 </html>
